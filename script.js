@@ -1,3 +1,4 @@
+// B-Math loading...
 console.log("B-Math loading...");
 
 const grid = document.getElementById("gameGrid");
@@ -5,7 +6,7 @@ const modal = document.getElementById("gameModal");
 const frame = document.getElementById("gameFrame");
 const title = document.getElementById("gameTitle");
 
-let currentGame = "";
+let currentGame = null;
 
 function loadGames() {
   if (!grid) {
@@ -13,7 +14,7 @@ function loadGames() {
     return;
   }
 
-  if (!window.games) {
+  if (!window.games || !Array.isArray(window.games)) {
     console.error("games not loaded");
     return;
   }
@@ -25,29 +26,36 @@ function loadGames() {
     card.className = "game";
 
     card.innerHTML = `
-      <img src="${g.icon}">
-      <div>${g.name}</div>
+      <img src="${g.icon || ''}" alt="${g.name || 'game'}">
+      <div>${g.name || 'Untitled'}</div>
     `;
 
-    card.onclick = () => openGame(g);
+    card.addEventListener("click", () => openGame(g));
     grid.appendChild(card);
   });
 }
 
 function openGame(g) {
-  if (!g?.file) return;
+  if (!g || !g.file) return;
 
-  frame.src = g.file;
-  title.textContent = g.name;
-  modal.classList.remove("hidden");
+  currentGame = g;
+
+  if (frame) frame.src = g.file;
+  if (title) title.textContent = g.name || "Game";
+
+  if (modal) modal.classList.remove("hidden");
 }
 
 function closeGame() {
-  modal.classList.add("hidden");
-  frame.src = "";
+  if (modal) modal.classList.add("hidden");
+  if (frame) frame.src = "";
+  currentGame = null;
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  modal.classList.add("hidden");   // 🚨 FIXES YOUR CURRENT BUG
+  if (modal) modal.classList.add("hidden");
   loadGames();
+
+  const closeBtn = document.getElementById("closeBtn");
+  if (closeBtn) closeBtn.addEventListener("click", closeGame);
 });
