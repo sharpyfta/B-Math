@@ -1,4 +1,4 @@
-window.games = [
+export const games = [
   {
     name: "Slope",
     icon: "./games/icons/slope.png",
