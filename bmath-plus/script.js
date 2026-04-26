@@ -1,14 +1,26 @@
-console.log("script loaded");
+console.log("B-Math+ script loaded");
 
+/* ===== SAFE ELEMENT GETTERS ===== */
 const grid = document.getElementById("gameGrid");
 const modal = document.getElementById("gameModal");
 const frame = document.getElementById("gameFrame");
 const title = document.getElementById("gameTitle");
 
+/* Prevent crash if HTML missing something */
+if (!grid || !modal || !frame || !title) {
+  console.error("Missing required HTML elements!");
+}
+
+/* ===== CURRENT GAME ===== */
 let currentGame = "";
 
-/* 🎮 LOAD GAMES */
+/* ===== LOAD GAMES ===== */
 function loadGames() {
+  if (!grid || typeof games === "undefined") {
+    console.error("games list missing!");
+    return;
+  }
+
   grid.innerHTML = "";
 
   games.forEach(g => {
@@ -16,7 +28,7 @@ function loadGames() {
     div.className = "game";
 
     div.innerHTML = `
-      <img src="${g.icon}">
+      <img src="${g.icon}" onerror="this.style.display='none'">
       <div>${g.name}</div>
     `;
 
@@ -25,96 +37,52 @@ function loadGames() {
   });
 }
 
-/* 🎮 OPEN GAME */
+/* ===== OPEN GAME ===== */
 function openGame(g) {
+  if (!g || !g.file) {
+    console.error("Game file missing:", g);
+    return;
+  }
+
   currentGame = g.file;
   frame.src = g.file;
   title.innerText = g.name;
   modal.classList.remove("hidden");
 }
 
-/* CLOSE GAME */
+/* ===== CLOSE GAME ===== */
 function closeGame() {
   modal.classList.add("hidden");
   frame.src = "";
 }
 
-/* FULLSCREEN */
+/* ===== FULLSCREEN ===== */
 function fullscreenGame() {
   frame.requestFullscreen?.();
 }
 
-/* NEW TAB */
+/* ===== NEW TAB ===== */
 function openNewTab() {
-  window.open(currentGame, "_blank");
+  if (currentGame) {
+    window.open(currentGame, "_blank");
+  }
 }
 
-/* 🔎 GAME SEARCH */
-document.getElementById("search").addEventListener("input", e => {
-  const val = e.target.value.toLowerCase();
+/* ===== SEARCH GAMES ===== */
+const search = document.getElementById("search");
 
-  document.querySelectorAll(".game").forEach(el => {
-    el.style.display =
-      el.innerText.toLowerCase().includes(val) ? "block" : "none";
-  });
-});
+if (search) {
+  search.addEventListener("input", e => {
+    const val = e.target.value.toLowerCase();
 
-/* 📩 REQUEST SYSTEM */
-let requests = [];
-
-function addRequest() {
-  const input = document.getElementById("requestInput");
-  if (!input.value.trim()) return;
-
-  requests.push(input.value);
-  document.getElementById("requestList").innerHTML =
-    requests.map(r => `<li>${r}</li>`).join("");
-
-  input.value = "";
-}
-
-/* 🎵 MUSIC SYSTEM */
-const musicSearch = document.getElementById("musicSearch");
-const musicResults = document.getElementById("musicResults");
-const musicPlayer = document.getElementById("musicPlayer");
-const musicFrame = document.getElementById("musicFrame");
-const nowPlaying = document.getElementById("nowPlaying");
-
-const songs = [
-  { name: "Golden Hour - JVKE", query: "JVKE Golden Hour" },
-  { name: "Golden - Harry Styles", query: "Harry Styles Golden" },
-  { name: "Heat Waves - Glass Animals", query: "Heat Waves Glass Animals" }
-];
-
-musicSearch.addEventListener("input", e => {
-  const val = e.target.value.toLowerCase();
-  musicResults.innerHTML = "";
-
-  songs
-    .filter(s => s.name.toLowerCase().includes(val))
-    .forEach(song => {
-      const div = document.createElement("div");
-      div.className = "song";
-      div.innerText = song.name;
-
-      div.onclick = () => playSong(song);
-      musicResults.appendChild(div);
+    document.querySelectorAll(".game").forEach(el => {
+      el.style.display =
+        el.innerText.toLowerCase().includes(val) ? "block" : "none";
     });
+  });
+}
+
+/* ===== INIT SAFELY ===== */
+window.addEventListener("DOMContentLoaded", () => {
+  loadGames();
 });
-
-function playSong(song) {
-  musicFrame.src =
-    "https://www.youtube.com/embed?listType=search&list=" +
-    encodeURIComponent(song.query);
-
-  nowPlaying.innerText = "Now Playing: " + song.name;
-  musicPlayer.classList.remove("hidden");
-}
-
-function closeMusic() {
-  musicPlayer.classList.add("hidden");
-  musicFrame.src = "";
-}
-
-/* INIT */
-loadGames();
