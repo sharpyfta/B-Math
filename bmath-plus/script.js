@@ -1,3 +1,5 @@
+console.log("script loaded");
+
 const grid = document.getElementById("gameGrid");
 const modal = document.getElementById("gameModal");
 const frame = document.getElementById("gameFrame");
