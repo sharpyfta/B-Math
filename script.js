@@ -1,61 +1,44 @@
-// B-Math loading...
-console.log("B-Math loading...");
+import { games } from "./games.js";
 
-const grid = document.getElementById("gameGrid");
-const modal = document.getElementById("gameModal");
-const frame = document.getElementById("gameFrame");
-const title = document.getElementById("gameTitle");
+const grid = document.getElementById("grid");
+const modal = document.getElementById("modal");
+const frame = document.getElementById("frame");
+const title = document.getElementById("title");
+const closeBtn = document.getElementById("closeBtn");
+const searchBar = document.getElementById("searchBar");
 
-let currentGame = null;
-
-function loadGames() {
-  if (!grid) {
-    console.error("gameGrid missing");
-    return;
-  }
-
-  if (!window.games || !Array.isArray(window.games)) {
-    console.error("games not loaded");
-    return;
-  }
-
+function loadGames(list = games) {
   grid.innerHTML = "";
 
-  window.games.forEach(g => {
+  list.forEach(game => {
     const card = document.createElement("div");
     card.className = "game";
 
     card.innerHTML = `
-      <img src="${g.icon || ''}" alt="${g.name || 'game'}">
-      <div>${g.name || 'Untitled'}</div>
+      <img src="${game.icon}" />
+      <p>${game.name}</p>
     `;
 
-    card.addEventListener("click", () => openGame(g));
+    card.onclick = () => {
+      title.textContent = game.name;
+      frame.src = game.file;
+      modal.style.display = "flex";
+    };
+
     grid.appendChild(card);
   });
 }
 
-function openGame(g) {
-  if (!g || !g.file) return;
+closeBtn.onclick = () => {
+  modal.style.display = "none";
+  frame.src = "";
+};
 
-  currentGame = g;
-
-  if (frame) frame.src = g.file;
-  if (title) title.textContent = g.name || "Game";
-
-  if (modal) modal.classList.remove("hidden");
-}
-
-function closeGame() {
-  if (modal) modal.classList.add("hidden");
-  if (frame) frame.src = "";
-  currentGame = null;
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  if (modal) modal.classList.add("hidden");
-  loadGames();
-
-  const closeBtn = document.getElementById("closeBtn");
-  if (closeBtn) closeBtn.addEventListener("click", closeGame);
+searchBar.addEventListener("input", e => {
+  const value = e.target.value.toLowerCase();
+  loadGames(
+    games.filter(g => g.name.toLowerCase().includes(value))
+  );
 });
+
+loadGames();
