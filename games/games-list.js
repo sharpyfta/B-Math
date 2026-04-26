@@ -1,0 +1,17 @@
+const games = [
+  {
+    name: "Slope",
+    icon: "games/icons/slope.png",
+    file: "games/html/slope.html"
+  },
+  {
+    name: "1v1.LOL",
+    icon: "games/icons/1v1.png",
+    file: "games/html/1v1.html"
+  },
+  {
+    name: "Tunnel Rush",
+    icon: "games/icons/tunnel.png",
+    file: "games/html/tunnel.html"
+  }
+];
