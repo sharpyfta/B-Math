@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>B+-Math</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+<!-- 🔝 TOP BAR -->
 <header class="topbar">
   <div class="logo">B+-Math</div>
 
-  <input id="search" placeholder="Search Games On B+ Math..." />
+  <input id="search" placeholder="Search games..." />
 
   <div class="top-icons">
     <button id="requestBtn">➕</button>
@@ -23,16 +26,16 @@
   <div id="gameGrid" class="grid"></div>
 </main>
 
-<!-- 🎮 MODAL (FIXED SAFE VERSION) -->
+<!-- 🎮 MODAL -->
 <div id="gameModal" class="modal hidden">
-  
+
   <div class="modalTop">
     <span id="gameTitle"></span>
 
     <div class="modalButtons">
-      <button onclick="fullscreenGame()">Fullscreen</button>
-      <button onclick="openNewTab()">New Tab</button>
-      <button onclick="closeGame()">✖</button>
+      <button id="fullscreenBtn">Fullscreen</button>
+      <button id="newTabBtn">New Tab</button>
+      <button id="closeBtn">✖</button>
     </div>
   </div>
 
@@ -44,26 +47,13 @@
 <div id="requestPanel" class="panel hidden">
   <h3>Game Requests</h3>
   <input id="requestInput" placeholder="Request a game..." />
-  <button onclick="addRequest()">Submit</button>
+  <button id="submitRequest">Submit</button>
   <ul id="requestList"></ul>
 </div>
 
-<!-- ✅ SCRIPTS (CLEAN ORDER - VERY IMPORTANT) -->
+<!-- ✅ SCRIPTS (MODERN SAFE ORDER) -->
 <script src="games/game-list.js"></script>
 <script src="script.js"></script>
 
-<script>
-/* 🔒 HARD SAFETY RESET (PREVENT AUTO OPEN BUG) */
-window.addEventListener("DOMContentLoaded", () => {
-  const modal = document.getElementById("gameModal");
-  const frame = document.getElementById("gameFrame");
-
-  if (modal) modal.classList.add("hidden");
-  if (frame) frame.src = "about:blank";
-});
-</script>
-  
-<script src="games/game-list.js"></script>
-<script src="script.js"></script>
 </body>
 </html>
