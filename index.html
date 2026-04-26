@@ -18,23 +18,27 @@
   </div>
 </header>
 
-
 <!-- 🎮 GAME GRID -->
 <main>
   <div id="gameGrid" class="grid"></div>
 </main>
 
-<!-- 🎮 GAME MODAL -->
+<!-- 🎮 MODAL (FIXED SAFE VERSION) -->
 <div id="gameModal" class="modal hidden">
+  
   <div class="modalTop">
     <span id="gameTitle"></span>
-    <button onclick="fullscreenGame()">Fullscreen</button>
-    <button onclick="openNewTab()">New Tab</button>
-    <button onclick="closeGame()">✖</button>
-  </div>
-  <iframe id="gameFrame"></iframe>
-</div>
 
+    <div class="modalButtons">
+      <button onclick="fullscreenGame()">Fullscreen</button>
+      <button onclick="openNewTab()">New Tab</button>
+      <button onclick="closeGame()">✖</button>
+    </div>
+  </div>
+
+  <iframe id="gameFrame" src="about:blank"></iframe>
+
+</div>
 
 <!-- 📩 REQUEST PANEL -->
 <div id="requestPanel" class="panel hidden">
@@ -44,7 +48,20 @@
   <ul id="requestList"></ul>
 </div>
 
-  <script src="../games/game-list.js"></script>
-<script src="../script.js"></script>
+<!-- ✅ SCRIPTS (CLEAN ORDER - VERY IMPORTANT) -->
+<script src="games/game-list.js"></script>
+<script src="script.js"></script>
+
+<script>
+/* 🔒 HARD SAFETY RESET (PREVENT AUTO OPEN BUG) */
+window.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("gameModal");
+  const frame = document.getElementById("gameFrame");
+
+  if (modal) modal.classList.add("hidden");
+  if (frame) frame.src = "about:blank";
+});
+</script>
+
 </body>
 </html>
