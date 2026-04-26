@@ -1,6 +1,5 @@
-console.log("B-Math loaded safely");
+console.log("B-Math loading...");
 
-/* ELEMENTS */
 const grid = document.getElementById("gameGrid");
 const modal = document.getElementById("gameModal");
 const frame = document.getElementById("gameFrame");
@@ -8,62 +7,47 @@ const title = document.getElementById("gameTitle");
 
 let currentGame = "";
 
-/* SAFETY: NEVER OPEN ANYTHING ON LOAD */
 function loadGames() {
-  if (!grid || typeof games === "undefined") {
-    console.error("Missing grid or games array");
+  if (!grid) {
+    console.error("gameGrid missing");
+    return;
+  }
+
+  if (!window.games) {
+    console.error("games not loaded");
     return;
   }
 
   grid.innerHTML = "";
 
-  games.forEach(g => {
+  window.games.forEach(g => {
     const card = document.createElement("div");
     card.className = "game";
 
     card.innerHTML = `
-      <img src="${g.icon}" alt="${g.name}">
+      <img src="${g.icon}">
       <div>${g.name}</div>
     `;
 
-    // ONLY OPENS ON CLICK
-    card.addEventListener("click", () => openGame(g));
-
+    card.onclick = () => openGame(g);
     grid.appendChild(card);
   });
 }
 
-/* OPEN GAME (ONLY CLICK TRIGGERED) */
 function openGame(g) {
-  if (!g || !g.file) return;
+  if (!g?.file) return;
 
-  currentGame = g.file;
   frame.src = g.file;
   title.textContent = g.name;
   modal.classList.remove("hidden");
 }
 
-/* CLOSE GAME */
 function closeGame() {
   modal.classList.add("hidden");
   frame.src = "";
-  currentGame = "";
 }
 
-/* FULLSCREEN */
-function fullscreenGame() {
-  frame.requestFullscreen?.();
-}
-
-/* NEW TAB */
-function openNewTab() {
-  if (currentGame) {
-    window.open(currentGame, "_blank");
-  }
-}
-
-/* INIT — HARD STOP AUTO OPEN BUG */
 window.addEventListener("DOMContentLoaded", () => {
-  modal.classList.add("hidden"); // FORCE CLOSED ON LOAD
+  modal.classList.add("hidden");   // 🚨 FIXES YOUR CURRENT BUG
   loadGames();
 });
